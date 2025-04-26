@@ -1,42 +1,19 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useAuth } from "../../../components/AuthProvider";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
 import React from "react";
-
-// Zod schema for login form validation
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { useAuth } from "@/components/AuthProvider";
+import { useRouter } from "next/navigation";
+import { LogIn } from "@/components/icons";
+import { 
+  AuthLayout, 
+  AuthFooter, 
+  LoginForm, 
+  SocialLoginButtons 
+} from "@/components/modules/auth";
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
-  });
-
-  // Handle form submission
-  function onSubmit(values: LoginFormValues) {
-    login(values.email, values.password);
-    router.push("/");
-  }
 
   // If already logged in, redirect to home
   React.useEffect(() => {
@@ -44,49 +21,28 @@ export default function LoginPage() {
   }, [user, router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-4">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="you@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Your password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full">Login</Button>
-            </form>
-          </Form>
-          <div className="mt-4 text-center text-sm">
-            Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <AuthLayout
+      title="Sign in to your account"
+      description="Enter your credentials below"
+      headerTitle="Welcome back"
+      headerDescription="Enter your credentials to sign in"
+      icon={
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-white">
+          <LogIn size={32} />
+        </div>
+      }
+      footerContent={
+        <AuthFooter
+          text="Don't have an account?"
+          linkText="Create an account"
+          linkHref="/register"
+        >
+          <SocialLoginButtons />
+        </AuthFooter>
+      }
+    >
+      <LoginForm />
+    </AuthLayout>
   );
 }
   

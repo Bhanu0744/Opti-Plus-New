@@ -1,9 +1,9 @@
 // AuthProvider: Provides authentication state and actions to the app using React context.
 // Uses the mock auth utility in lib/auth.ts
 // Wrap your app with <AuthProvider> in layout.tsx
-
+"use client";
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getCurrentUser, login as mockLogin, register as mockRegister, logout as mockLogout, User } from '../lib/auth';
+import { getCurrentUser, login as mockLogin, register as mockRegister, logout as mockLogout, User } from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;

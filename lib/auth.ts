@@ -7,7 +7,7 @@ export type User = {
   email: string;
 };
 
-const AUTH_KEY = 'optibro_auth_user';
+const AUTH_KEY = 'optiplus_auth_user';
 
 // Get the current user from localStorage, or null if not logged in
 export function getCurrentUser(): User | null {
